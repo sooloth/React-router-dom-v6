@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link,Routes,Route, Outlet } from 'react-router-dom';
 import './App.css';
 
 function App() {
@@ -6,6 +6,13 @@ function App() {
     <div>
       <h3>Hello world</h3>
       <Navigation />
+
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path='home' element={<Home />} />
+          <Route path='users' element={<Users />} />
+        </Route>
+      </Routes>
       
     </div>
   );
@@ -15,10 +22,15 @@ const Navigation = () => {
     <nav
       style={{
         borderBottom: 'solid 1px',
-        paddingBottom: '1rem',
+        padding: '1rem',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '2rem',
+        margin: '2rem',
+        listStyleType: 'none',
       }}
     >
-    <Link to="/home">Home</Link>
+    <Link to="/home" style={{listStyle:'none'}}>Home</Link>
     <Link to="/users">Users</Link>
     </nav>
   )
@@ -30,7 +42,7 @@ const Home = () => {
     </main>
   )
 }
-const users = () => {
+const Users = () => {
   return (
     <main style={{ padding: '1rem 0'}}>
       <h2>Users</h2>
@@ -38,10 +50,14 @@ const users = () => {
   )
 }
 
+const Layout = () => {
+  return <main style={{ padding: '1rem 0' }}><Outlet/></main>;
+};
 
-module.exports = {
+export {
   App,
   Navigation,
   Home,
-  users
+  Users,
+  Layout
 }
