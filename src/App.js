@@ -1,4 +1,4 @@
-import { Link,Routes,Route, Outlet } from 'react-router-dom';
+import { Link,Routes,Route, Outlet, NavLink } from 'react-router-dom';
 import './App.css';
 
 function App() {
@@ -9,13 +9,18 @@ function App() {
 
       <Routes>
         <Route element={<Layout />}>
+          <Route index element={<Home/>} />
           <Route path='home' element={<Home />} />
           <Route path='users' element={<Users />} />
+          <Route path='*' element={<NoMatch />}/>
         </Route>
       </Routes>
       
     </div>
   );
+}
+const NoMatch = () => {
+  return (<p>There's nothing here 404!</p>)
 }
 const Navigation = () => {
   return (
@@ -51,7 +56,27 @@ const Users = () => {
 }
 
 const Layout = () => {
-  return <main style={{ padding: '1rem 0' }}><Outlet/></main>;
+  const style = ({ isActive}) => ({
+    fontweight: isActive ? 'bold' : 'normal',
+  });
+  return (
+    <>
+      <h1>React Router</h1>
+      <nav
+        style={{
+          borderBottom: 'solid 1px',
+          paddingBottom: '1rem',
+        }}
+      >
+      <NavLink to='/home' style={style}>Home</NavLink>
+      <NavLink to='/users' style={style}>Users</NavLink>
+
+      </nav>
+      <main style={{ padding: '1rem 0' }}>
+        <Outlet/>
+      </main>;
+  </>
+  )
 };
 
 export {
