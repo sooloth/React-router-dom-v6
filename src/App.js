@@ -1,7 +1,28 @@
-import { Link,Routes,Route, Outlet, NavLink } from 'react-router-dom';
+import { Routes,Route, useNavigate} from 'react-router-dom';
 import './App.css';
+import Navigation from './Nav.jsx';
+import Layout from './Layout.jsx';
+import Home from './Home.jsx';
+import Users from './Users.jsx';
+import Error from './Error.jsx';
+import User from './User.jsx';
+import { useState } from 'react';
+
 
 function App() {
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([
+    {id: '1', fullName: 'Sooloth SCH'},
+    {id: '2', fullName: 'PhoneKham KNVS'},
+  ]);
+
+  const handleRemoveUser = (userId) => {
+    setUsers((state) => state.filter((user) => user.id !== userId));
+  }
+
+
+  navigate('/users');
+
   return (
     <div>
       <h3>Hello world</h3>
@@ -11,78 +32,16 @@ function App() {
         <Route element={<Layout />}>
           <Route index element={<Home/>} />
           <Route path='home' element={<Home />} />
-          <Route path='users' element={<Users />} />
-          <Route path='*' element={<NoMatch />}/>
+          <Route path='users' element={<Users users={users}/>}>
+            <Route path=':userId' element={<User onRemoveUser={handleRemoveUser} />}/>
+          </Route>
+          <Route path='*' element={<Error />}/>
         </Route>
       </Routes>
       
     </div>
   );
 }
-const NoMatch = () => {
-  return (<p>There's nothing here 404!</p>)
-}
-const Navigation = () => {
-  return (
-    <nav
-      style={{
-        borderBottom: 'solid 1px',
-        padding: '1rem',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '2rem',
-        margin: '2rem',
-        listStyleType: 'none',
-      }}
-    >
-    <Link to="/home" style={{listStyle:'none'}}>Home</Link>
-    <Link to="/users">Users</Link>
-    </nav>
-  )
-}
-const Home = () => {
-  return (
-    <main style={{ padding: '1rem 0'}}>
-      <h2>Home</h2>
-    </main>
-  )
-}
-const Users = () => {
-  return (
-    <main style={{ padding: '1rem 0'}}>
-      <h2>Users</h2>
-    </main>
-  )
-}
 
-const Layout = () => {
-  const style = ({ isActive}) => ({
-    fontweight: isActive ? 'bold' : 'normal',
-  });
-  return (
-    <>
-      <h1>React Router</h1>
-      <nav
-        style={{
-          borderBottom: 'solid 1px',
-          paddingBottom: '1rem',
-        }}
-      >
-      <NavLink to='/home' style={style}>Home</NavLink>
-      <NavLink to='/users' style={style}>Users</NavLink>
 
-      </nav>
-      <main style={{ padding: '1rem 0' }}>
-        <Outlet/>
-      </main>;
-  </>
-  )
-};
-
-export {
-  App,
-  Navigation,
-  Home,
-  Users,
-  Layout
-}
+export default App;
